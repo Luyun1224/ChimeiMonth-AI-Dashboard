@@ -87,10 +87,102 @@
             /* 加一點淡邊框（使用 slate-soft），幫助卡片與背景分離但不突兀 */
             border: 1px solid rgba(111,146,158,0.12);
         }
+        /* 倒數看板樣式 */
+        .hero-banner {
+            background: linear-gradient(90deg, rgba(16,55,120,0.95), rgba(5,147,162,0.95));
+            color: #fff;
+            padding: 2rem 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(3,37,65,0.35);
+            margin-bottom: 1.5rem;
+        }
+        .hero-banner .kicker {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .hero-banner .countdown {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.35rem;
+            flex-wrap: wrap;
+        }
+        .count-item {
+            min-width: 110px;
+            padding: 0.8rem 1.05rem;
+            text-align: center;
+            /* 更通透的玻璃效果：更低不透明度 + 較強的背後模糊 */
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+            /* 輕薄邊框以強化玻璃感（透明度略高以表現邊緣） */
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 6px 20px rgba(3,37,65,0.10);
+            transition: transform 200ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms;
+        }
+        .count-item:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(3,37,65,0.12); }
+        .count-number {
+            font-size: 2.8rem;
+            line-height: 1;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 3px 10px rgba(3,37,65,0.35);
+            transition: transform 220ms cubic-bezier(.2,.9,.2,1);
+            display: inline-block;
+        }
+        @media (min-width: 768px) {
+            .count-number { font-size: 3.6rem; }
+            .count-item { min-width: 140px; }
+        }
+        .count-label { font-size: 0.95rem; opacity: 0.95; margin-top: 0.28rem; color: rgba(255,255,255,0.92); }
+        .count-note { margin-top: 0.2rem; opacity: 0.96; font-weight: 600; }
+
+        /* 當數字更新時做一個輕微脈動動畫，讓倒數更活潑 */
+        @keyframes pulseScale {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.16); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulseScale 420ms cubic-bezier(.2,.9,.2,1);
+        }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="custom-container mx-auto">
+        <!-- 主視覺倒數看板 -->
+        <div class="hero-banner">
+            <div class="text-center">
+                <div class="kicker">活動倒數</div>
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mt-2">AI 數位賦能工作坊 — 11/23（日）</h2>
+                <!-- 說明文字放在倒數上方，讓使用者先看到語意提示 -->
+                <div id="count-note" class="count-note" style="margin-bottom:0.6rem; font-weight:600; opacity:0.95;">距離工作坊開始還有</div>
+                <div id="countdown" class="countdown" aria-live="polite">
+                    <div class="count-item">
+                        <div id="days" class="count-number">--</div>
+                        <div class="count-label">天</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="hours" class="count-number">--</div>
+                        <div class="count-label">時</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="minutes" class="count-number">--</div>
+                        <div class="count-label">分</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="seconds" class="count-number">--</div>
+                        <div class="count-label">秒</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 主標題和副標題 --><div class="text-center mb-12">
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold page-title mb-3">
                 AI數位賦能工作坊分組名單
@@ -105,7 +197,7 @@
             <!-- 第一組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-blue-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第一組</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 承洋</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 承洋</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -186,7 +278,7 @@
             <!-- 第二組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-green-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第二組</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 文豪</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 文豪</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -267,7 +359,7 @@
             <!-- 第三組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-purple-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第三組</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 曉琪</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 曉琪</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -348,7 +440,7 @@
             <!-- 第四組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-orange-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第四組</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 宜婷</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 宜婷</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -424,7 +516,7 @@
             <!-- 第五組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-teal-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第五組</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 淑雅</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 淑雅</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -497,7 +589,7 @@
             <!-- 第六組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-pink-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第六組 (貓頭鷹)</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 詩芸</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 詩芸</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -578,7 +670,7 @@
             <!-- 第七組 --><div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
                 <!-- 卡片標題 --><div class="group-header bg-indigo-600 text-white p-5">
                     <h2 class="text-3xl font-bold text-center">第七組 (貓頭鷹)</h2>
-                    <p class="text-xl text-center font-semibold mt-1">組長: 英云</p>
+                    <p class="text-xl text-center font-semibold mt-1">講師: 英云</p>
                 </div>
                 <!-- 成員列表 --><ul class="divide-y divide-gray-200 p-6 flex-grow">
                     <li class="py-4">
@@ -657,5 +749,69 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // 倒數計時：目標日期使用本地時區 (年, 月-1, 日, 時, 分, 秒)
+        (function() {
+            // 使用台北時區為基準：建立一個帶時區偏移的 ISO 字串（+08:00）
+            // 這樣不依賴使用者瀏覽器時區，會把目標時間固定為台北 2025-11-23 00:00:00
+            const target = new Date('2025-11-23T00:00:00+08:00'); // 2025-11-23 00:00:00 台北時間
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const noteEl = document.getElementById('count-note');
+            const countdownWrap = document.getElementById('countdown');
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            let prevDays = null, prevHours = null, prevMinutes = null, prevSeconds = null;
+            function update() {
+                const now = new Date();
+                let diff = target - now;
+                if (diff <= 0) {
+                    // 工作坊已開始或結束
+                    if (countdownWrap) countdownWrap.style.display = 'none';
+                    if (noteEl) noteEl.textContent = '工作坊已開始！歡迎參加。';
+                    clearInterval(timer);
+                    return;
+                }
+
+                const totalSec = Math.floor(diff / 1000);
+                const days = Math.floor(totalSec / 86400);
+                const hours = Math.floor((totalSec % 86400) / 3600);
+                const minutes = Math.floor((totalSec % 3600) / 60);
+                const seconds = totalSec % 60;
+                // 只有在數值真正改變時才做脈動動畫（避免每秒跳動造成干擾）
+                if (daysEl && days !== prevDays) {
+                    daysEl.textContent = days;
+                    daysEl.classList.add('pulse');
+                    setTimeout(() => daysEl.classList.remove('pulse'), 420);
+                    prevDays = days;
+                }
+                if (hoursEl && hours !== prevHours) {
+                    hoursEl.textContent = pad(hours);
+                    hoursEl.classList.add('pulse');
+                    setTimeout(() => hoursEl.classList.remove('pulse'), 420);
+                    prevHours = hours;
+                }
+                if (minutesEl && minutes !== prevMinutes) {
+                    minutesEl.textContent = pad(minutes);
+                    minutesEl.classList.add('pulse');
+                    setTimeout(() => minutesEl.classList.remove('pulse'), 420);
+                    prevMinutes = minutes;
+                }
+                // 秒數頻繁更新，但不做脈動動畫以免干擾視覺
+                if (secondsEl && seconds !== prevSeconds) {
+                    secondsEl.textContent = pad(seconds);
+                    prevSeconds = seconds;
+                }
+                if (noteEl) noteEl.textContent = '距離工作坊開始還有';
+            }
+
+            update();
+            const timer = setInterval(update, 1000);
+        })();
+    </script>
 </body>
 </html>
