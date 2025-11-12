@@ -4,9 +4,9 @@ const finalDashboardData = {
     "totalExternal": 21,
     "totalInternal": 39,
     "roleKpi": {
-        "it": 5,
+        "it": 2,
         "clinical": 24,
-        "nonClinical": 31
+        "nonClinical": 34
     },
     "decisionMakerKpi": {
         "decisionMakers": 15, 
@@ -37,9 +37,9 @@ const finalDashboardData = {
     ],
     "groupRoleData": {
         "labels": ["第一組", "第二組", "第三組", "第四組", "第五組", "第六組(貓頭鷹)", "第七組(貓頭鷹)"],
-        "it": [0, 1, 2, 0, 1, 1, 0],
+        "it": [0, 0, 1, 0, 1, 0, 0],
         "clinical": [6, 4, 0, 4, 1, 4, 5],
-        "nonClinical": [3, 4, 6, 4, 6, 4, 4]
+        "nonClinical": [3, 5, 7, 4, 6, 5, 4]
     },
     "externalAnalysis": {
         "byType": {
@@ -86,7 +86,7 @@ if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
 
 
 // ----- DOM 載入後執行 -----
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 0. 動態更新所有 KPI 數字 ---
     document.getElementById('kpi-total').textContent = finalDashboardData.totalCount;
@@ -235,6 +235,97 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+
+    // --- 2. 從 list.html 自動推斷職類並繪製圖表 ---
+    async function computeRolesFromList() {
+        try {
+            const resp = await fetch('list.html');
+            const text = await resp.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+
+            const groupCards = Array.from(doc.querySelectorAll('div.bg-white'));
+            const labels = [];
+            const itArr = [];
+            const clinicalArr = [];
+            const nonClinicalArr = [];
+
+            // 擴充臨床關鍵字，包含常見臨床職稱與相關字眼
+            const clinicalKeywords = ['醫師','主治','院長','住院醫師','護理師','護理長','醫檢師','臨床','營養師','治療師','物理治療師','呼吸治療','護理','主任','臨床醫檢師','主治醫師','主任醫師','護理', '護理長', '護理師', '助理研究員', '研究員'];
+
+            function isClinical(title) {
+                if (!title) return false;
+                for (const kw of clinicalKeywords) {
+                    if (title.indexOf(kw) !== -1) return true;
+                }
+                return false;
+            }
+
+            for (const card of groupCards) {
+                const h2 = card.querySelector('.group-header h2');
+                if (!h2) continue; // skip non-group cards
+                const groupName = h2.textContent.trim();
+                labels.push(groupName);
+
+                let itCount = 0, clinicalCount = 0, nonClinicalCount = 0;
+                const lis = Array.from(card.querySelectorAll('ul li'));
+                for (const li of lis) {
+                    const pTags = Array.from(li.querySelectorAll('p'));
+                    const deptP = pTags.find(p => p.textContent.includes('部門:'));
+                    const titleP = pTags.find(p => p.textContent.includes('職稱:'));
+                    const dept = deptP ? deptP.textContent.replace('部門:', '').trim() : '';
+                    const title = titleP ? titleP.textContent.replace('職稱:', '').trim() : '';
+
+                    // 規則優先順序：
+                    // 1) 若部門含有「病歷資訊」或「疾病分類」等字樣，視為非臨床（避免被誤判為資訊）
+                    if (dept.indexOf('病歷資訊') !== -1 || dept.indexOf('疾病分類') !== -1) {
+                        nonClinicalCount++;
+                        continue;
+                    }
+                    // 2) 若部門包含「資訊室」則視為資訊背景
+                    if (dept.indexOf('資訊室') !== -1) {
+                        itCount++;
+                        continue;
+                    }
+                    // 其餘若職稱包含臨床關鍵字視為臨床
+                    if (isClinical(title)) {
+                        clinicalCount++;
+                        continue;
+                    }
+                    // 其餘視為非臨床
+                    nonClinicalCount++;
+                }
+
+                itArr.push(itCount);
+                clinicalArr.push(clinicalCount);
+                nonClinicalArr.push(nonClinicalCount);
+            }
+
+            // compute totals
+            const totalIt = itArr.reduce((a,b) => a+b, 0);
+            const totalClinical = clinicalArr.reduce((a,b) => a+b, 0);
+            const totalNonClinical = nonClinicalArr.reduce((a,b) => a+b, 0);
+
+            // overwrite finalDashboardData
+            finalDashboardData.groupRoleData = {
+                labels: labels,
+                it: itArr,
+                clinical: clinicalArr,
+                nonClinical: nonClinicalArr
+            };
+            finalDashboardData.roleKpi.it = totalIt;
+            finalDashboardData.roleKpi.clinical = totalClinical;
+            finalDashboardData.roleKpi.nonClinical = totalNonClinical;
+
+            return {labels, itArr, clinicalArr, nonClinicalArr};
+        } catch (err) {
+            console.warn('無法自動解析 list.html，使用內建 finalDashboardData：', err);
+            return null;
+        }
+    }
+
+    // 在繪圖前先嘗試從 list.html 推斷職類分布（同步更新 finalDashboardData）
+    await computeRolesFromList();
 
     // --- 2. 圖表繪製 ---
     if (typeof Chart !== 'undefined') {
