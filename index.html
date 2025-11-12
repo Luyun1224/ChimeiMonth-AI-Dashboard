@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI數位賦能工作坊報名儀表板</title>
+    <title>AI數位賦能工作坊報名儀表板 v2.0</title>
     
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +14,7 @@
     
     <!-- 載入 Chart.js (圖表) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- (全新) 載入 Chart.js Datalabels 插件 -->
+    <!-- 載入 Chart.js Datalabels 插件 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     
     <!-- 載入 Google Fonts (Noto Sans TC) -->
@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 載入拆分出去的 CSS 檔案 -->
+    <!-- 載入您的 CSS 檔案 -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-brand-base text-brand-dark p-4 md:p-8 transition-all duration-500 ease-in-out">
@@ -35,47 +35,53 @@
             </h1>
         </header>
 
-        <!-- (全新) KPI 區配色 -->
+        <!-- KPI 區 (維持不變) -->
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-brand-neutral kpi-card cinematic-mask p-6 text-brand-light"> <!-- 總報名 -> 中性灰 -->
+            <div class="bg-brand-neutral kpi-card cinematic-mask p-6 text-brand-light">
                 <h2 class="text-lg font-semibold opacity-80">總報名人數</h2>
                 <p id="kpi-total" class="text-5xl md:text-6xl font-bold mt-4">60</p>
             </div>
-            <div class="bg-brand-accent kpi-card cinematic-mask p-6 text-brand-dark"> <!-- 院外 -> 琥珀黃 -->
+            <div class="bg-brand-accent kpi-card cinematic-mask p-6 text-brand-dark">
                 <h2 class="text-lg font-semibold opacity-80">院外人員</h2>
                 <p id="kpi-external" class="text-5xl md:text-6xl font-bold mt-4">21</p>
             </div>
-            <div class="bg-brand-main kpi-card cinematic-mask p-6 text-brand-light"> <!-- 院內 -> 品牌藍 -->
+            <div class="bg-brand-main kpi-card cinematic-mask p-6 text-brand-light">
                 <h2 class="text-lg font-semibold opacity-80">奇美醫院同仁</h2>
                 <p id="kpi-internal" class="text-5xl md:text-6xl font-bold mt-4">39</p>
             </div>
         </section>
         
-        <!-- 圖表區 (地圖 & 佔比) -->
-        <section class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <!-- [改造] 圖表區 (地圖 & 新增圖表) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- 地圖 -->
-            <div class="lg:col-span-3 bg-white cinematic-mask p-4 md:p-6">
+            <!-- (調整) 地圖 -->
+            <div class="lg:col-span-1 bg-white cinematic-mask p-4 md:p-6">
                 <h2 class="text-xl font-bold mb-1">報名人員地理分佈</h2>
                 <p id="map-subtitle" class="text-sm opacity-70">(來源: 全體人員, N=60)</p>
-                
-                <!-- (全新) 地區人數標籤配色 -->
                 <div id="city-counts-container" class="flex flex-wrap gap-2 mt-2 mb-4">
                     <!-- 內容將由 JavaScript 動態填入 -->
                 </div>
-                
-                <div id="map" class="mt-0"></div>
+                <div id="map" class="mt-0"></div> <!-- 高度由 styles.css 控制 -->
             </div>
 
-            <!-- 右側圖表 (垂直堆疊) -->
-            <div class="lg:col-span-2 space-y-6">
+            <!-- (新增) 右側新圖表 (垂直堆疊) -->
+            <div class="lg:col-span-1 space-y-6">
                 
-                <!-- (合併) 全體人員背景分析 -->
+                <!-- (新增) 全體人員職類分析 -->
                 <div class="bg-white cinematic-mask p-4 md:p-6">
-                    <h2 class="text-xl font-bold mb-1">全體人員背景分析</h2>
-                    <p class="text-sm opacity-70 mb-4">(來源: 分組名單, N=60)</p>
-                    <div id="combined-analysis-chart-container" style="height: 460px;" class="flex items-center justify-center">
-                        <canvas id="combinedAnalysisChart"></canvas>
+                    <h2 class="text-xl font-bold mb-1">全體人員職類分析</h2>
+                    <p class="text-sm opacity-70 mb-4">(來源: 全體人員, N=60)</p>
+                    <div id="role-chart-container" style="height: 210px;" class="flex items-center justify-center">
+                        <canvas id="roleChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- (新增) 決策者分析 -->
+                <div class="bg-white cinematic-mask p-4 md:p-6">
+                    <h2 class="text-xl font-bold mb-1">關鍵角色分析</h2>
+                    <p class="text-sm opacity-70 mb-4">(來源: 全體人員, N=60)</p>
+                    <div id="decision-chart-container" style="height: 210px;" class="flex items-center justify-center">
+                        <canvas id="decisionMakerChart"></canvas>
                     </div>
                 </div>
 
@@ -83,23 +89,37 @@
 
         </section>
         
-        <!-- 分組長條圖 -->
-        <section class="bg-white cinematic-mask p-4 md:p-6">
-             <div class="flex justify-between items-center mb-1">
-                <h2 class="text-xl font-bold">各組成員職類結構</h2>
-                <span class="data-badge" style="background-color: #f8fafc; color: #1f2937;">來源: 分組名單 (N=60)</span>
-             </div>
-            <p class="text-sm opacity-70 mb-4">
-                顯示 N=60 位成員在各組的「資訊」、「臨床」、「非臨床」職類結構。
-            </p>
-            <div id="group-chart-container">
-                <canvas id="groupChart"></canvas>
+        <!-- [改造] 圖表區 (原有圖表) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+            <!-- (調整) 分組長條圖 -->
+            <div class="lg:col-span-1 bg-white cinematic-mask p-4 md:p-6">
+                 <div class="flex justify-between items-center mb-1">
+                    <h2 class="text-xl font-bold">各組成員職類結構</h2>
+                    <span class="data-badge" style="background-color: #f8fafc; color: #1f2937;">來源: 分組名單 (N=60)</span>
+                 </div>
+                <p class="text-sm opacity-70 mb-4">
+                    顯示 N=60 位成員在各組的「資訊」、「臨床」、「非臨床」職類結構。
+                </p>
+                <div id="group-chart-container" style="height: 400px;"> <!-- 調整高度 -->
+                    <canvas id="groupChart"></canvas>
+                </div>
             </div>
+            
+            <!-- (調整) 全體人員背景分析 (圓環圖) -->
+            <div class="lg:col-span-1 bg-white cinematic-mask p-4 md:p-6">
+                <h2 class="text-xl font-bold mb-1">全體人員背景分析</h2>
+                <p class="text-sm opacity-70 mb-4">(來源: 分組名單, N=60)</p>
+                <div id="combined-analysis-chart-container" style="height: 400px;" class="flex items-center justify-center"> <!-- 調整高度 -->
+                    <canvas id="combinedAnalysisChart"></canvas>
+                </div>
+            </div>
+            
         </section>
 
     </div>
 
-    <!-- 載入拆分出去的 JavaScript 檔案 -->
+    <!-- 載入改造後的 JavaScript 檔案 -->
     <script type="module" src="script.min.js"></script>
 </body>
 </html>
