@@ -38,9 +38,15 @@
             max-width: 95%; /* 接近滿版 */
         }
         
-        /* 讓卡片本身也帶有半透明效果，以便融入背景 */
+        /* 讓卡片本身也帶有微透玻璃效果（可看到底圖） */
         .bg-white {
-            background-color: rgba(255, 255, 255, 0.85) !important; /* 讓卡片帶點透明感 */
+            /* 半透明但不要太薄：大約 75~85% 白色不透明度，讓底圖能隱約透出 */
+            background-color: rgba(255, 255, 255, 0.82) !important;
+            /* 玻璃模糊效果，讓底圖透出時仍保有可讀性（支援較新的瀏覽器） */
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            /* 加一點淡邊框，幫助卡片與背景分離 */
+            border: 1px solid rgba(255,255,255,0.6);
         }
     </style>
 </head>
