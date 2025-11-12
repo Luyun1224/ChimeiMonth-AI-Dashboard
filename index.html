@@ -31,12 +31,22 @@
          */
         body {
             font-family: 'Noto Sans TC', sans-serif;
+            background-image: url('圖片.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             background-color: #f8fafc; /* 基底 */
         }
-        .bg-brand-base { background-color: #f8fafc; }
-        .bg-brand-main { background-color: #003566; } /* (全新) 院內 (品牌藍) */
-        .bg-brand-accent { background-color: #fca311; } /* (全新) 院外 (品牌琥珀) */
-        .bg-brand-neutral { background-color: #6b7280; } /* (全新) 中性色 (灰色) */
+        .bg-brand-base { background-color: transparent; }
+        .bg-brand-main { 
+            background-color: rgba(0, 53, 102, 0.5) !important; /* (全新) 院內 (品牌藍) 50% 透明 */
+        }
+        .bg-brand-accent { 
+            background-color: rgba(252, 163, 17, 0.5) !important; /* (全新) 院外 (品牌琥珀) 50% 透明 */
+        }
+        .bg-brand-neutral { 
+            background-color: rgba(107, 114, 128, 0.5) !important; /* (全新) 中性色 (灰色) 50% 透明 */
+        }
         
         .text-brand-dark { color: #1f2937; } /* slate-800 */
         .text-brand-light { color: #f8fafc; }
@@ -46,6 +56,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             border-radius: 0.75rem;
             overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.5) !important;
         }
         
         .cinematic-mask::before {
@@ -72,6 +83,11 @@
         #group-chart-container { 
             height: 450px; 
             padding-top: 20px; 
+        }
+
+        /* (全新) 白色框格 50% 透明度 */
+        .bg-white {
+            background-color: rgba(255, 255, 255, 0.5) !important;
         }
 
         .morandi-marker-icon {
