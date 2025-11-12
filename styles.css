@@ -1,0 +1,230 @@
+/* * ---------------------------------------------------
+ * (全新) 階段一：設計風格指南 (Style Guide)
+ * 風格：專業品牌風格 (高對比)
+ * 色彩：院內 #003566, 院外 #fca311, 中性色 #6b7280, 基底 #f8fafc
+ * ---------------------------------------------------
+ */
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-image: url('圖片.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #f8fafc; /* 基底 */
+}
+.bg-brand-base { background-color: #f8fafc; }
+.bg-brand-main { background-color: #003D82; } /* 品牌藍 - 更深的藍 */
+.bg-brand-accent { background-color: #FFA500; } /* 院外 - 亮琥珀黃 */
+.bg-brand-neutral { background-color: #708090; } /* 中性色 - 灰藍 */
+
+/* KPI 卡片保持原本顏色不透明 */
+.kpi-card {
+    background-color: inherit !important;
+}
+
+/* 為 KPI 卡片設定具體的背景顏色 */
+.kpi-card.bg-brand-neutral {
+    background-color: #708090 !important;
+}
+
+.kpi-card.bg-brand-accent {
+    background-color: #FFA500 !important;
+}
+
+.kpi-card.bg-brand-main {
+    background-color: #003D82 !important;
+}
+
+.text-brand-dark { color: #1f2937; } /* slate-800 */
+.text-brand-light { color: #f8fafc; }
+
+.cinematic-mask {
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+/* 只有 bg-white 的 cinematic-mask 才應用半透明白色背景 */
+.bg-white.cinematic-mask {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.cinematic-mask::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.02) 100%);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 0.75rem;
+}
+
+#map {
+    /* 調整高度以容納地區標籤 */
+    height: 460px; 
+    width: 100%;
+    border-radius: 0.75rem;
+    z-index: 5;
+}
+
+#group-chart-container { 
+    height: 450px; 
+    padding-top: 20px; 
+}
+
+/* (全新) 白色框格 50% 透明度 */
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.morandi-marker-icon {
+    background-color: #FFA500; /* 院外 (琥珀黃) */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.morandi-marker-icon::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.morandi-marker-icon-external-hospital {
+    background-color: #FFA500; /* 院外醫院 (琥珀黃) */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.morandi-marker-icon-external-hospital::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.morandi-marker-icon-external-clinic {
+    background-color: #20B2AA; /* 院外診所 (青綠色) */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.morandi-marker-icon-external-clinic::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.morandi-marker-icon-external-other {
+    background-color: #9370DB; /* 院外其他 (紫色) */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.morandi-marker-icon-external-other::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.morandi-marker-icon-internal {
+    background-color: #003D82; /* 院內 (品牌藍) */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.morandi-marker-icon-internal::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.cinematic-title {
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-shadow: 
+        0 0 8px rgba(255, 255, 255, 0.6),
+        0 0 12px rgba(100, 200, 255, 0.4);
+    animation: gentle-glow 4s ease-in-out infinite;
+}
+
+@keyframes gentle-glow {
+    0%, 100% {
+        text-shadow: 
+            0 0 8px rgba(255, 255, 255, 0.6),
+            0 0 12px rgba(100, 200, 255, 0.4);
+        filter: brightness(1);
+    }
+    50% {
+        text-shadow: 
+            0 0 12px rgba(255, 255, 255, 0.8),
+            0 0 18px rgba(100, 200, 255, 0.5);
+        filter: brightness(1.05);
+    }
+}
+
+.data-badge {
+    font-size: 0.75rem;
+    background-color: #fef9c3; 
+    color: #92400e; 
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 700;
+}
+
+/* (全新) 用於地圖上的永久標籤 */
+.location-tooltip {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    font-weight: 700;
+    color: #1f2937; /* text-brand-dark */
+    /* 加上一點點白色外框，讓文字在深色地圖上更清晰 */
+    text-shadow: 
+        -1px -1px 0 #fff,  
+         1px -1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px  1px 0 #fff;
+    font-size: 13px; 
+    padding: 2px 5px;
+}
