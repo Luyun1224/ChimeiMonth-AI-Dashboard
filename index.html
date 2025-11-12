@@ -37,15 +37,14 @@
             background-attachment: fixed;
             background-color: #f8fafc; /* 基底 */
         }
-        .bg-brand-base { background-color: transparent; }
-        .bg-brand-main { 
-            background-color: rgba(0, 53, 102, 0.5) !important; /* (全新) 院內 (品牌藍) 50% 透明 */
-        }
-        .bg-brand-accent { 
-            background-color: rgba(252, 163, 17, 0.5) !important; /* (全新) 院外 (品牌琥珀) 50% 透明 */
-        }
-        .bg-brand-neutral { 
-            background-color: rgba(107, 114, 128, 0.5) !important; /* (全新) 中性色 (灰色) 50% 透明 */
+        .bg-brand-base { background-color: #f8fafc; }
+        .bg-brand-main { background-color: #003566; } /* (全新) 院內 (品牌藍) */
+        .bg-brand-accent { background-color: #fca311; } /* (全新) 院外 (品牌琥珀) */
+        .bg-brand-neutral { background-color: #6b7280; } /* (全新) 中性色 (灰色) */
+        
+        /* KPI 卡片保持原本顏色不透明 */
+        .kpi-card {
+            background-color: inherit !important;
         }
         
         .text-brand-dark { color: #1f2937; } /* slate-800 */
@@ -130,6 +129,9 @@
 
         .cinematic-title {
             letter-spacing: 0.05em;
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 900;
         }
         
         .data-badge {
@@ -165,31 +167,24 @@
     <div class="max-w-7xl mx-auto space-y-8">
 
         <header class="text-center p-6">
-            <h1 class="text-3xl md:text-4xl font-bold cinematic-title">
+            <h1 class="font-bold cinematic-title">
                 AI 工作坊 報名儀表板 (N=60)
             </h1>
         </header>
 
         <!-- (全新) KPI 區配色 -->
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-brand-neutral cinematic-mask p-6 text-brand-light"> <!-- 總報名 -> 中性灰 -->
-                <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold opacity-80">總報名人數</h2>
-                    <span class="data-badge" style="background-color: #6b7280; color: #ffffff;">來源: 分組名單 (N=60)</span>
-                </div>
-                <p id="kpi-total" class="text-4xl font-bold mt-2">60</p>
+            <div class="bg-brand-neutral kpi-card cinematic-mask p-6 text-brand-light"> <!-- 總報名 -> 中性灰 -->
+                <h2 class="text-lg font-semibold opacity-80">總報名人數</h2>
+                <p id="kpi-total" class="text-5xl md:text-6xl font-bold mt-4">60</p>
             </div>
-            <div class="bg-brand-accent cinematic-mask p-6 text-brand-dark"> <!-- 院外 -> 琥珀黃 -->
-                <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold opacity-80">院外人員</h2>
-                    <span class="data-badge" style="background-color: #fca311; color: #1f2937;">來源: 分組名單 (N=21)</span>
-                </div>
-                <p id="kpi-external" class="text-4xl font-bold mt-2">21</p>
+            <div class="bg-brand-accent kpi-card cinematic-mask p-6 text-brand-dark"> <!-- 院外 -> 琥珀黃 -->
+                <h2 class="text-lg font-semibold opacity-80">院外人員</h2>
+                <p id="kpi-external" class="text-5xl md:text-6xl font-bold mt-4">21</p>
             </div>
-            <div class="bg-brand-main cinematic-mask p-6 text-brand-light"> <!-- 院內 -> 品牌藍 -->
+            <div class="bg-brand-main kpi-card cinematic-mask p-6 text-brand-light"> <!-- 院內 -> 品牌藍 -->
                 <h2 class="text-lg font-semibold opacity-80">奇美醫院同仁</h2>
-                <span class="data-badge" style="background-color: #003566; color: #ffffff;">來源: 分組名單 (N=39)</span>
-                <p id="kpi-internal" class="text-4xl font-bold mt-2">39</p>
+                <p id="kpi-internal" class="text-5xl md:text-6xl font-bold mt-4">39</p>
             </div>
         </section>
         
@@ -515,6 +510,18 @@
                         }
                     },
                     plugins: {
+                        datalabels: {
+                            formatter: (value) => {
+                                return value > 0 ? value : '';
+                            },
+                            color: '#ffffff',
+                            font: {
+                                weight: 'bold',
+                                size: 14,
+                            },
+                            textStrokeColor: 'rgba(0,0,0,0.5)',
+                            textStrokeWidth: 2
+                        },
                         tooltip: {
                             callbacks: {
                                 footer: function(tooltipItems) {
