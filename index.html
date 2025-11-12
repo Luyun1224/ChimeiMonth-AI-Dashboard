@@ -1,109 +1,23 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI數位賦能工作坊報名儀表板</title>
-    
-    <!-- 載入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 載入 Leaflet.js (地圖) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
-    <!-- 載入 Chart.js (圖表) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- (全新) 載入 Chart.js Datalabels 插件 -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-    
-    <!-- 載入 Google Fonts (Noto Sans TC) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- 載入拆分出去的 CSS 檔案 -->
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="bg-brand-base text-brand-dark p-4 md:p-8 transition-all duration-500 ease-in-out">
-
-    <div class="max-w-7xl mx-auto space-y-8">
-
-        <header class="relative text-center p-6">
-            <!-- 右上連結：前往分組名單（移上方、增大可點擊面、加粗字） -->
-            <a href="./list.html" class="absolute top-2 right-4 inline-flex items-center px-5 py-3 rounded-md shadow-sm focus:outline-none z-50 font-semibold" style="background-color: rgba(255,255,255,0.92); color: #003D82; border: 1px solid rgba(0,61,130,0.08);">
-                分組名單
-            </a>
-            <h1 class="font-bold cinematic-title">
-                AI數位賦能工作坊報名儀表板
-            </h1>
-        </header>
-
-        <!-- (全新) KPI 區配色 -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-brand-neutral kpi-card cinematic-mask p-6 text-brand-light"> <!-- 總報名 -> 中性灰 -->
-                <h2 class="text-lg font-semibold opacity-80">總報名人數</h2>
-                <p id="kpi-total" class="text-5xl md:text-6xl font-bold mt-4">60</p>
-            </div>
-            <div class="bg-brand-accent kpi-card cinematic-mask p-6 text-brand-dark"> <!-- 院外 -> 琥珀黃 -->
-                <h2 class="text-lg font-semibold opacity-80">院外人員</h2>
-                <p id="kpi-external" class="text-5xl md:text-6xl font-bold mt-4">21</p>
-            </div>
-            <div class="bg-brand-main kpi-card cinematic-mask p-6 text-brand-light"> <!-- 院內 -> 品牌藍 -->
-                <h2 class="text-lg font-semibold opacity-80">奇美醫院同仁</h2>
-                <p id="kpi-internal" class="text-5xl md:text-6xl font-bold mt-4">39</p>
-            </div>
-        </section>
-        
-        <!-- 圖表區 (地圖 & 佔比) -->
-        <section class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            
-            <!-- 地圖 -->
-            <div class="lg:col-span-3 bg-white cinematic-mask p-4 md:p-6">
-                <h2 class="text-xl font-bold mb-1">報名人員地理分佈</h2>
-                <p id="map-subtitle" class="text-sm opacity-70">(來源: 全體人員, N=60)</p>
-                
-                <!-- (全新) 地區人數標籤配色 -->
-                <div id="city-counts-container" class="flex flex-wrap gap-2 mt-2 mb-4">
-                    <!-- 內容將由 JavaScript 動態填入 -->
-                </div>
-                
-                <div id="map" class="mt-0"></div>
-            </div>
-
-            <!-- 右側圖表 (垂直堆疊) -->
-            <div class="lg:col-span-2 space-y-6">
-                
-                <!-- (合併) 全體人員背景分析 -->
-                <div class="bg-white cinematic-mask p-4 md:p-6">
-                    <h2 class="text-xl font-bold mb-1">全體人員背景分析</h2>
-                    <p class="text-sm opacity-70 mb-4">(來源: 分組名單, N=60)</p>
-                    <div id="combined-analysis-chart-container" style="height: 460px;" class="flex items-center justify-center">
-                        <canvas id="combinedAnalysisChart"></canvas>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-        
-        <!-- 分組長條圖 -->
-        <section class="bg-white cinematic-mask p-4 md:p-6">
-             <div class="flex justify-between items-center mb-1">
-                <h2 class="text-xl font-bold">各組成員職類結構</h2>
-                <span class="data-badge" style="background-color: #f8fafc; color: #1f2937;">來源: 分組名單 (N=60)</span>
-             </div>
-            <p class="text-sm opacity-70 mb-4">
-                顯示 N=60 位成員在各組的「資訊」、「臨床」、「非臨床」職類結構。
-            </p>
-            <div id="group-chart-container">
-                <canvas id="groupChart"></canvas>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- 載入拆分出去的 JavaScript 檔案（開發使用非壓縮版以便即時更新） -->
-    <script src="script.js"></script>
-</body>
-</html>
+<script>
+    // Assuming the existing rendering code
+    var ctx = document.getElementById('groupChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Label1', 'Label2', 'Label3'],
+            datasets: [{
+                label: 'Non-Clinical Data',
+                data: [10, 20, 30],
+                backgroundColor: 'rgba(75, 192, 192, 1)', // Set a contrasting color here
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
