@@ -9,8 +9,26 @@
     <style>
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            background-color: #f3f4f6; /* 使用 Tailwind 的 gray-100 */
+            background-color: #f3f4f6; /* 保留一個基底色 */
+            position: relative; /* 為了 ::before 偽元素定位 */
+            z-index: 1; /* 確保內容在偽元素之上 */
         }
+
+        body::before {
+            content: "";
+            position: fixed; /* 固定背景，不隨滾動移動 */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('123.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.5; /* 刷淡 50% */
+            z-index: -1; /* 移到內容之後 */
+        }
+
         /* 增加卡片標題的視覺效果 */
         .group-header {
             border-bottom: 4px solid rgba(0,0,0,0.1);
@@ -18,6 +36,11 @@
         /* 自定義容器寬度以實現滿版效果 */
         .custom-container {
             max-width: 95%; /* 接近滿版 */
+        }
+        
+        /* 讓卡片本身也帶有半透明效果，以便融入背景 */
+        .bg-white {
+            background-color: rgba(255, 255, 255, 0.85) !important; /* 讓卡片帶點透明感 */
         }
     </style>
 </head>
@@ -496,7 +519,7 @@
                         <p class="text-sm text-gray-700">部門: 營養科</p>
                         <p class="text-sm text-gray-500">職稱: 營養師</p>
                     </li>
-                    <li class="py-4">
+                    <li class_content_fetch_id="py-4">
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-lg font-semibold text-gray-800">周光祺</span>
                             <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">奇美醫院</span>
