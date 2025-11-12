@@ -107,7 +107,7 @@
         }
 
         .morandi-marker-icon {
-            background-color: #fca311; /* (全新) 院外 (品牌琥珀) */
+            background-color: #FFA500; /* 院外 (琥珀黃) */
             border: 2px solid #ffffff;
             border-radius: 50%;
             width: 20px;
@@ -118,6 +118,63 @@
             justify-content: center;
         }
         .morandi-marker-icon::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        
+        .morandi-marker-icon-external-hospital {
+            background-color: #FFA500; /* 院外醫院 (琥珀黃) */
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .morandi-marker-icon-external-hospital::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        
+        .morandi-marker-icon-external-clinic {
+            background-color: #20B2AA; /* 院外診所 (青綠色) */
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .morandi-marker-icon-external-clinic::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        
+        .morandi-marker-icon-external-other {
+            background-color: #9370DB; /* 院外其他 (紫色) */
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .morandi-marker-icon-external-other::after {
             content: '';
             width: 8px;
             height: 8px;
@@ -149,6 +206,25 @@
             color: #ffffff;
             font-size: 3.5rem;
             font-weight: 900;
+            text-shadow: 
+                0 0 8px rgba(255, 255, 255, 0.6),
+                0 0 12px rgba(100, 200, 255, 0.4);
+            animation: gentle-glow 4s ease-in-out infinite;
+        }
+        
+        @keyframes gentle-glow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px rgba(255, 255, 255, 0.6),
+                    0 0 12px rgba(100, 200, 255, 0.4);
+                filter: brightness(1);
+            }
+            50% {
+                text-shadow: 
+                    0 0 12px rgba(255, 255, 255, 0.8),
+                    0 0 18px rgba(100, 200, 255, 0.5);
+                filter: brightness(1.05);
+            }
         }
         
         .data-badge {
@@ -317,22 +393,22 @@
 
         // ----- 地理編碼字典 -----
         const externalLocations = {
-            "奇美醫院": { lat: 23.021, lon: 120.241, name: "奇美醫院", city: "台南市", type: "internal" },
-            "中山大學": { lat: 22.6295, lon: 120.2662, name: "中山大學", city: "高雄市", type: "external" },
-            "成大醫院": { lat: 22.9996, lon: 120.2223, name: "成大醫院", city: "台南市", type: "external" },
-            "大林慈濟醫院": { lat: 23.5935, lon: 120.4658, name: "大林慈濟醫院", city: "嘉義縣", type: "external" },
-            "高雄榮民總醫院": { lat: 22.6744, lon: 120.3233, name: "高雄榮民總醫院", city: "高雄市", type: "external" },
-            "寶建醫院": { lat: 22.6808, lon: 120.4850, name: "寶建醫院", city: "屏東縣", type: "external" },
-            "李俊杰診所": { lat: 22.9934, lon: 120.2127, name: "李俊杰診所", city: "台南市", type: "external" },
-            "三愛診所": { lat: 23.0033, lon: 120.2163, name: "三愛診所", city: "台南市", type: "external" },
-            "德幼小兒科": { lat: 23.0063, lon: 120.2114, name: "德幼小兒科", city: "台南市", type: "external" },
-            "復華耳鼻喉科診所": { lat: 23.0090, lon: 120.2274, name: "復華耳鼻喉科診所", city: "台南市", type: "external" },
-            "晉慶眼科診所": { lat: 23.0001, lon: 120.2130, name: "晉慶眼科診所", city: "台南市", type: "external" },
-            "正信診所": { lat: 23.0232, lon: 120.2241, name: "正信診所", city: "台南市", type: "external" },
-            "黃清相診所": { lat: 23.0253, lon: 120.2198, name: "黃清相診所", city: "台南市", type: "external" },
-            "高雄醫學大學": { lat: 22.6465, lon: 120.3010, name: "高雄醫學大學", city: "高雄市", type: "external" },
-            "國光生物科技": { lat: 24.2154, lon: 120.6022, name: "國光生物科技", city: "台中市", type: "external" },
-            "樹德科技大學": { lat: 22.7091, lon: 120.3473, name: "樹德科技大學", city: "高雄市", type: "external" }
+            "奇美醫院": { lat: 23.021, lon: 120.241, name: "奇美醫院", city: "台南市", type: "internal", category: "醫院" },
+            "中山大學": { lat: 22.6295, lon: 120.2662, name: "中山大學", city: "高雄市", type: "external", category: "學校" },
+            "成大醫院": { lat: 22.9996, lon: 120.2223, name: "成大醫院", city: "台南市", type: "external", category: "醫院" },
+            "大林慈濟醫院": { lat: 23.5935, lon: 120.4658, name: "大林慈濟醫院", city: "嘉義縣", type: "external", category: "醫院" },
+            "高雄榮民總醫院": { lat: 22.6744, lon: 120.3233, name: "高雄榮民總醫院", city: "高雄市", type: "external", category: "醫院" },
+            "寶建醫院": { lat: 22.6808, lon: 120.4850, name: "寶建醫院", city: "屏東縣", type: "external", category: "醫院" },
+            "李俊杰診所": { lat: 22.9934, lon: 120.2127, name: "李俊杰診所", city: "台南市", type: "external", category: "診所" },
+            "三愛診所": { lat: 23.0033, lon: 120.2163, name: "三愛診所", city: "台南市", type: "external", category: "診所" },
+            "德幼小兒科": { lat: 23.0063, lon: 120.2114, name: "德幼小兒科", city: "台南市", type: "external", category: "診所" },
+            "復華耳鼻喉科診所": { lat: 23.0090, lon: 120.2274, name: "復華耳鼻喉科診所", city: "台南市", type: "external", category: "診所" },
+            "晉慶眼科診所": { lat: 23.0001, lon: 120.2130, name: "晉慶眼科診所", city: "台南市", type: "external", category: "診所" },
+            "正信診所": { lat: 23.0232, lon: 120.2241, name: "正信診所", city: "台南市", type: "external", category: "診所" },
+            "黃清相診所": { lat: 23.0253, lon: 120.2198, name: "黃清相診所", city: "台南市", type: "external", category: "診所" },
+            "高雄醫學大學": { lat: 22.6465, lon: 120.3010, name: "高雄醫學大學", city: "高雄市", type: "external", category: "學校" },
+            "國光生物科技": { lat: 24.2154, lon: 120.6022, name: "國光生物科技", city: "台中市", type: "external", category: "其他" },
+            "樹德科技大學": { lat: 22.7091, lon: 120.3473, name: "樹德科技大學", city: "高雄市", type: "external", category: "學校" }
             // 歐洲工商管理學院 未編碼 (N=1)
         };
 
@@ -361,14 +437,24 @@
                 maxZoom: 19
             }).addTo(map);
 
-            // (全新) 定義兩種標記
-            const externalIcon = L.divIcon({
-                className: 'morandi-marker-icon', // 琥珀色 (院外)
+            // (全新) 定義多種標記（院內、院外醫院、院外診所、院外其他）
+            const internalIcon = L.divIcon({
+                className: 'morandi-marker-icon-internal', // 品牌藍 (院內)
                 iconSize: [20, 20]
             });
             
-            const internalIcon = L.divIcon({
-                className: 'morandi-marker-icon-internal', // 品牌藍 (院內)
+            const externalHospitalIcon = L.divIcon({
+                className: 'morandi-marker-icon-external-hospital', // 琥珀黃 (院外醫院)
+                iconSize: [20, 20]
+            });
+            
+            const externalClinicIcon = L.divIcon({
+                className: 'morandi-marker-icon-external-clinic', // 青綠色 (院外診所)
+                iconSize: [20, 20]
+            });
+            
+            const externalOtherIcon = L.divIcon({
+                className: 'morandi-marker-icon-external-other', // 紫色 (院外其他)
                 iconSize: [20, 20]
             });
 
@@ -473,7 +559,16 @@
                     </div>
                 `;
                 
-                const iconToUse = (loc.info.type === 'internal') ? internalIcon : externalIcon;
+                let iconToUse;
+                if (loc.info.type === 'internal') {
+                    iconToUse = internalIcon;
+                } else if (loc.info.category === '醫院') {
+                    iconToUse = externalHospitalIcon;
+                } else if (loc.info.category === '診所') {
+                    iconToUse = externalClinicIcon;
+                } else {
+                    iconToUse = externalOtherIcon;
+                }
                 
                 // (全新) 永久標籤的內容 (僅顯示機構名稱)
                 const tooltipContent = loc.info.name;
