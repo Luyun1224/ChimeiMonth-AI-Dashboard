@@ -7,9 +7,20 @@
     <!-- 載入 Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Inter 字體 --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
+        /* 調色板：使用者提供五色 + 補兩色，放在 :root 方便全站使用 */
+        :root {
+            --brand-dark: #0E1722;       /* 深暗 */
+            --brand-navy: #103778;       /* 深藍 */
+            --brand-teal: #0593A2;       /* 青綠 */
+            --brand-orange: #FF7A48;     /* 橘 */
+            --brand-red: #E3371E;        /* 鮮紅 */
+            --neutral-cream: #F6EDE6;    /* 淺暖中性（卡片/頁面淺底） */
+            --slate-soft: #6F929E;       /* 柔和石板藍（次要文字/邊框） */
+        }
+
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            background-color: #f3f4f6; /* 保留一個基底色 */
+            background-color: var(--neutral-cream); /* 使用淺暖中性作為大面積基底 */
             position: relative; /* 為了 ::before 偽元素定位 */
             z-index: 1; /* 確保內容在偽元素之上 */
         }
@@ -31,8 +42,36 @@
 
         /* 增加卡片標題的視覺效果 */
         .group-header {
-            border-bottom: 4px solid rgba(0,0,0,0.1);
+            border-bottom: 4px solid rgba(0,0,0,0.08);
         }
+
+        /* 頁面主標題樣式：白色、大字、加上陰影以便在淺色背景或有底圖時凸顯 */
+        .page-title {
+            color: #ffffff;
+            text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+        }
+
+        /* 副標底色樣式：置中顯示、半透明深色或淺色選擇，可提高可讀性 */
+        .subtitle-badge {
+            display: inline-block; /* 讓底色包覆文字 */
+            background-color: rgba(0,0,0,0.45); /* 半透明深底，與白色文字對比明顯 */
+            color: #ffffff !important;
+            padding: 0.375rem 0.875rem;
+            border-radius: 0.5rem;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.06);
+            font-weight: 500;
+        }
+        /* 把 Tailwind 的 bg-*-600 映射成專案配色，讓顏色不會太刺眼 */
+        .group-header.bg-blue-600 { background-color: var(--brand-navy) !important; }
+        .group-header.bg-green-600 { background-color: var(--brand-teal) !important; }
+        .group-header.bg-purple-600 { background-color: var(--slate-soft) !important; }
+        .group-header.bg-orange-600 { background-color: var(--brand-orange) !important; }
+        .group-header.bg-teal-600 { background-color: var(--brand-teal) !important; }
+        .group-header.bg-pink-600 { background-color: var(--brand-red) !important; }
+        .group-header.bg-indigo-600 { background-color: var(--brand-navy) !important; }
+
         /* 自定義容器寬度以實現滿版效果 */
         .custom-container {
             max-width: 95%; /* 接近滿版 */
@@ -40,23 +79,23 @@
         
         /* 讓卡片本身也帶有微透玻璃效果（可看到底圖） */
         .bg-white {
-            /* 半透明但不要太薄：大約 75~85% 白色不透明度，讓底圖能隱約透出 */
+            /* 半透明但不要太薄：大約 82% 白色不透明度，讓底圖能隱約透出 */
             background-color: rgba(255, 255, 255, 0.82) !important;
             /* 玻璃模糊效果，讓底圖透出時仍保有可讀性（支援較新的瀏覽器） */
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
-            /* 加一點淡邊框，幫助卡片與背景分離 */
-            border: 1px solid rgba(255,255,255,0.6);
+            /* 加一點淡邊框（使用 slate-soft），幫助卡片與背景分離但不突兀 */
+            border: 1px solid rgba(111,146,158,0.12);
         }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="custom-container mx-auto">
         <!-- 主標題和副標題 --><div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800 mb-3">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold page-title mb-3">
                 AI數位賦能工作坊分組名單
             </h1>
-            <p class="text-xl text-gray-600">
+            <p class="text-xl subtitle-badge">
                 2025年11月23日 | 地點：奇美博物館豐收廳 / 貓頭鷹手作教室
             </p>
         </div>
