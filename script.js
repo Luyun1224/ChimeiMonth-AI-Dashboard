@@ -1,8 +1,4 @@
-// ---------------------------------------------------
-// 階段三：模組化元件 (資料處理與圖表邏輯)
-// ---------------------------------------------------
-
-// ----- 資料來源 (N=61) ----- -> (N=60)
+// ----- 資料來源 (N=60) -----
 const finalDashboardData = {
     "totalCount": 60,
     "totalExternal": 21,
@@ -77,20 +73,14 @@ const externalLocations = {
     "高雄醫學大學": { lat: 22.6465, lon: 120.3010, name: "高雄醫學大學", city: "高雄市", type: "external", category: "學校" },
     "國光生物科技": { lat: 24.2154, lon: 120.6022, name: "國光生物科技", city: "台中市", type: "external", category: "其他" },
     "樹德科技大學": { lat: 22.7091, lon: 120.3473, name: "樹德科技大學", city: "高雄市", type: "external", category: "學校" }
-    // 歐洲工商管理學院 未編碼 (N=1)
 };
 
 // ----- Chart.js 全域設定 -----
-// 確保 Chart 和 ChartDataLabels 是可用的 (因為它們是從 HTML <script> 標籤載入的)
-// 在
-// script.js 中，我們不能直接 import，但可以假設它們存在於 global scope
 if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
     Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
     Chart.defaults.color = '#1f2937'; 
     Chart.defaults.plugins.legend.position = 'bottom';
     Chart.defaults.plugins.legend.labels.padding = 20;
-
-    // (全新) 註冊 Datalabels 插件
     Chart.register(ChartDataLabels);
 }
 
@@ -104,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kpi-internal').textContent = finalDashboardData.totalInternal;
 
     // --- 1. 地理分佈圖 (依據 N=61 全體人員) ---
-    // 確保 L (Leaflet) 是可用的
     if (typeof L !== 'undefined') {
         const map = L.map('map').setView([23.1, 120.3], 9); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -113,24 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
             maxZoom: 19
         }).addTo(map);
 
-        // (全新) 定義多種標記（院內、院外醫院、院外診所、院外其他）
         const internalIcon = L.divIcon({
-            className: 'morandi-marker-icon-internal', // 品牌藍 (院內)
+            className: 'morandi-marker-icon-internal',
             iconSize: [20, 20]
         });
-        
         const externalHospitalIcon = L.divIcon({
-            className: 'morandi-marker-icon-external-hospital', // 琥珀黃 (院外醫院)
+            className: 'morandi-marker-icon-external-hospital',
             iconSize: [20, 20]
         });
-        
         const externalClinicIcon = L.divIcon({
-            className: 'morandi-marker-icon-external-clinic', // 青綠色 (院外診所)
+            className: 'morandi-marker-icon-external-clinic',
             iconSize: [20, 20]
         });
-        
         const externalOtherIcon = L.divIcon({
-            className: 'morandi-marker-icon-external-other', // 紫色 (院外其他)
+            className: 'morandi-marker-icon-external-other',
             iconSize: [20, 20]
         });
 
@@ -152,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         finalDashboardData.externalParticipantsList.forEach(person => {
             const locationInfo = findLocationInfo(person.unit);
-            
             if (locationInfo) {
                 mappedCount++; 
                 const geoKey = `${locationInfo.lat},${locationInfo.lon}`;
@@ -160,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     locationsToMark[geoKey] = { info: locationInfo, count: 0 };
                 }
                 locationsToMark[geoKey].count++;
-
                 const city = locationInfo.city;
                 if (city) {
                     if (!cityCounts[city]) cityCounts[city] = { internal: 0, external: 0 };
@@ -171,16 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const chimeiLocation = externalLocations["奇美醫院"];
         const chimeiGeoKey = `${chimeiLocation.lat},${chimeiLocation.lon}`;
-        
         if (!locationsToMark[chimeiGeoKey]) {
             locationsToMark[chimeiGeoKey] = { info: chimeiLocation, count: 0 };
         }
         locationsToMark[chimeiGeoKey].count += totalInternal;
-
         const chimeiCity = chimeiLocation.city;
         if (!cityCounts[chimeiCity]) cityCounts[chimeiCity] = { internal: 0, external: 0 };
         cityCounts[chimeiCity].internal += totalInternal;
-
         mappedCount += totalInternal;
 
         const subtitleEl = document.getElementById('map-subtitle');
@@ -188,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cityContainer = document.getElementById('city-counts-container');
         cityContainer.innerHTML = ''; 
-
         const sortedCities = Object.keys(cityCounts).sort((a, b) => {
             const totalA = (cityCounts[a].internal || 0) + (cityCounts[a].external || 0);
             const totalB = (cityCounts[b].internal || 0) + (cityCounts[b].external || 0);
@@ -201,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (counts.internal > 0) {
                     const badge = document.createElement('span');
                     badge.className = 'data-badge';
-                    badge.style.backgroundColor = '#003D82'; /* 院內 (品牌藍) */
+                    badge.style.backgroundColor = '#003D82';
                     badge.style.color = '#ffffff';
                     badge.textContent = `台南市 (院內) ${counts.internal} 人`;
                     cityContainer.appendChild(badge);
@@ -209,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (counts.external > 0) {
                     const badge = document.createElement('span');
                     badge.className = 'data-badge';
-                    badge.style.backgroundColor = '#FFA500'; /* 院外 (琥珀黃) */
-                    badge.style.color = '#1f2937'; /* 深色文字 */
+                    badge.style.backgroundColor = '#FFA500';
+                    badge.style.color = '#1f2937';
                     badge.textContent = `台南市 (院外) ${counts.external} 人`;
                     cityContainer.appendChild(badge);
                 }
@@ -219,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (total > 0) {
                     const badge = document.createElement('span');
                     badge.className = 'data-badge';
-                    badge.style.backgroundColor = '#FFA500'; /* 院外 (琥珀黃) */
-                    badge.style.color = '#1f2937'; /* 深色文字 */
+                    badge.style.backgroundColor = '#FFA500';
+                    badge.style.color = '#1f2937';
                     badge.textContent = `${city} ${total} 人`;
                     cityContainer.appendChild(badge); 
                 } 
@@ -234,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     報名人數： ${loc.count} 人
                 </div>
             `;
-            
             let iconToUse;
             if (loc.info.type === 'internal') {
                 iconToUse = internalIcon;
@@ -245,26 +223,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 iconToUse = externalOtherIcon;
             }
-            
-            // (全新) 永久標籤的內容 (僅顯示機構名稱)
             const tooltipContent = loc.info.name;
-
             L.marker([loc.info.lat, loc.info.lon], { icon: iconToUse })
                 .addTo(map)
                 .bindPopup(popupContent)
-                // (全新) 綁定永久標籤
                 .bindTooltip(tooltipContent, {
-                    permanent: true,       // 設置為永久顯示
-                    direction: 'auto',     // 自動判斷方向
-                    offset: [10, 0],       // 往右偏移 10px
-                    className: 'location-tooltip' // 套用自訂 CSS
+                    permanent: true,
+                    direction: 'auto',
+                    offset: [10, 0],
+                    className: 'location-tooltip'
                 });
         });
     }
 
-    // --- 2. (全新) 分組長條圖配色 ---
-    // 確保 Chart 是可用的
+    // --- 2. 圖表繪製 ---
     if (typeof Chart !== 'undefined') {
+    
+        // (原有) 分組長條圖
         const ctxGroup = document.getElementById('groupChart').getContext('2d');
         new Chart(ctxGroup, {
             type: 'bar',
@@ -274,17 +249,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: '資訊',
                         data: finalDashboardData.groupRoleData.it,
-                        backgroundColor: '#003D82', // 院內 (品牌藍)
+                        backgroundColor: '#003D82', // 品牌藍
                     },
                     {
                         label: '臨床',
                         data: finalDashboardData.groupRoleData.clinical,
-                        backgroundColor: '#FFA500', // 院外 (琥珀黃)
+                        backgroundColor: '#FFA500', // 琥珀黃
                     },
                     {
                         label: '非臨床',
                         data: finalDashboardData.groupRoleData.nonClinical,
-                        backgroundColor: '#708090', // 中性色 (灰藍)
+                        backgroundColor: '#708090', // 灰藍
                     }
                 ]
             },
@@ -292,24 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true
-                    }
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
                 },
                 plugins: {
                     datalabels: {
-                        formatter: (value) => {
-                            return value > 0 ? value : '';
-                        },
+                        formatter: (value) => value > 0 ? value : '',
                         color: '#ffffff',
-                        font: {
-                            weight: 'bold',
-                            size: 14,
-                        },
+                        font: { weight: 'bold', size: 14 },
                         textStrokeColor: 'rgba(0,0,0,0.5)',
                         textStrokeWidth: 2
                     },
@@ -328,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- 3. (全新) 全體人員背景分析圖配色 ---
+        // (原有) 全體人員背景分析 (圓環圖)
         const ctxCombined = document.getElementById('combinedAnalysisChart').getContext('2d');
         new Chart(ctxCombined, {
             type: 'doughnut',
@@ -337,22 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: '背景分析',
                     data: [
-                        finalDashboardData.totalInternal, // 院內 (40)
-                        finalDashboardData.externalAnalysis.byHospitalLevel.醫學中心, // 院外 (6)
-                        finalDashboardData.externalAnalysis.byHospitalLevel.診所, // 院外 (7)
-                        finalDashboardData.externalAnalysis.byHospitalLevel.地區醫院, // 院外 (1)
-                        finalDashboardData.externalAnalysis.byType.學校, // 院外 (6)
-                        finalDashboardData.externalAnalysis.byType.其他 // 院外 (1)
+                        finalDashboardData.totalInternal,
+                        finalDashboardData.externalAnalysis.byHospitalLevel.醫學中心,
+                        finalDashboardData.externalAnalysis.byHospitalLevel.診所,
+                        finalDashboardData.externalAnalysis.byHospitalLevel.地區醫院,
+                        finalDashboardData.externalAnalysis.byType.學校,
+                        finalDashboardData.externalAnalysis.byType.其他
                     ],
-                    // (全新) 冷暖色分離
-                    backgroundColor: [
-                        '#003D82', // 冷色 (院內)
-                        '#FFA500', // 暖色 1 (琥珀)
-                        '#FFB84D', // 暖色 2
-                        '#FFCC99', // 暖色 3
-                        '#FFD9B3', // 暖色 4
-                        '#FFE6CC'  // 暖色 5
-                    ],
+                    backgroundColor: ['#003D82', '#FFA500', '#FFB84D', '#FFCC99', '#FFD9B3', '#FFE6CC'],
                     borderColor: '#FFFFFF',
                     borderWidth: 4,
                     hoverOffset: 8
@@ -362,26 +319,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    // (全新) Datalabels 插件設定
                     datalabels: {
                         formatter: (value, ctx) => {
-                            const dataset = ctx.chart.data.datasets[0];
-                            // 計算總和
-                            const total = dataset.data.reduce((acc, data) => acc + data, 0);
-                            // 計算百分比
+                            const total = ctx.chart.data.datasets[0].data.reduce((acc, data) => acc + data, 0);
                             const percentage = ((value / total) * 100).toFixed(1) + '%';
                             return percentage;
                         },
                         color: (context) => {
-                            // 為了易讀性，在亮黃色區塊上用深色文字
                             const bgColor = context.dataset.backgroundColor[context.dataIndex];
                             return (bgColor === '#FFB84D' || bgColor === '#FFCC99') ? '#1f2937' : '#ffffff';
                         },
-                        font: {
-                            weight: 'bold',
-                            size: 14,
-                        },
-                        // 加上一點點深色外框，讓白色文字更清晰
+                        font: { weight: 'bold', size: 14 },
                         textStrokeColor: 'rgba(0,0,0,0.3)',
                         textStrokeWidth: 2
                     },
@@ -389,9 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         callbacks: {
                             label: function(context) {
                                 let label = context.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
+                                if (label) { label += ': '; }
                                 if (context.parsed !== null) {
                                     const total = context.chart.getDatasetMeta(0).total;
                                     const value = context.parsed;
@@ -405,6 +351,121 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    }
+        
+        // --- (新增) 全體人員職類分析 (Pie Chart) ---
+        const ctxRole = document.getElementById('roleChart').getContext('2d');
+        new Chart(ctxRole, {
+            type: 'pie',
+            data: {
+                labels: ['臨床', '非臨床', '資訊'],
+                datasets: [{
+                    label: '職類分析',
+                    data: [
+                        finalDashboardData.roleKpi.clinical,
+                        finalDashboardData.roleKpi.nonClinical,
+                        finalDashboardData.roleKpi.it
+                    ],
+                    backgroundColor: [
+                        '#FFA500', // 琥珀黃
+                        '#708090', // 灰藍
+                        '#003D82'  // 品牌藍
+                    ],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            const total = ctx.chart.data.datasets[0].data.reduce((acc, data) => acc + data, 0);
+                            const percentage = ((value / total) * 100).toFixed(1) + '%';
+                            return percentage;
+                        },
+                        color: '#ffffff',
+                        font: { weight: 'bold', size: 14 },
+                        textStrokeColor: 'rgba(0,0,0,0.3)',
+                        textStrokeWidth: 2
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) {
+                                    const total = context.chart.getDatasetMeta(0).total;
+                                    const value = context.parsed;
+                                    const percentage = ((value / total) * 100).toFixed(1) + '%';
+                                    label += `${value} 人 (${percentage})`;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // --- (新增) 決策者分析 (Horizontal Bar Chart) ---
+        const ctxDecision = document.getElementById('decisionMakerChart').getContext('2d');
+        new Chart(ctxDecision, {
+            type: 'bar',
+            data: {
+                labels: ['決策者', '執行者'],
+                datasets: [{
+                    label: '關鍵角色',
+                    data: [
+                        finalDashboardData.decisionMakerKpi.decisionMakers,
+                        finalDashboardData.decisionMakerKpi.implementers
+                    ],
+                    backgroundColor: [
+                        '#003D82', // 品牌藍
+                        '#708090'  // 灰藍
+                    ],
+                    barThickness: 50 // 讓長條圖粗一點
+                }]
+            },
+            options: {
+                indexAxis: 'y', // 關鍵：轉為水平長條圖
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: false, // 隱藏 X 軸
+                        grid: { display: false }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // 隱藏圖例
+                    },
+                    datalabels: {
+                        formatter: (value) => value + ' 人', // 顯示 "XX 人"
+                        color: '#ffffff',
+                        anchor: 'center', // 顯示在中間
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 14,
+                        },
+                    },
+                     tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.label}: ${context.parsed.x} 人`
+                        }
+                    }
+                }
+            }
+        });
 
+    }
 });
