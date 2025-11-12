@@ -180,6 +180,13 @@
                         <div class="count-label">秒</div>
                     </div>
                 </div>
+                <!-- 加入行事曆按鈕與標語 -->
+                <div class="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                    <div class="flex gap-3">
+                        <button id="googleCalBtn" class="btn btn-primary" title="加入 Google 行事曆">🔔 加入 Google 行事曆</button>
+                    </div>
+                    <div class="text-sm mt-1 text-white opacity-95 font-semibold">當天不見不散！</div>
+                </div>
             </div>
         </div>
 
@@ -811,6 +818,22 @@
 
             update();
             const timer = setInterval(update, 1000);
+        })();
+        
+        // 行事曆功能：只支援打開 Google Calendar（預填活動）
+        (function() {
+            const googleBtn = document.getElementById('googleCalBtn');
+            // 事件基本資訊（可按需修改時間或時區）
+            const title = encodeURIComponent('AI 數位賦能工作坊');
+            const details = encodeURIComponent('地點：奇美博物館豐收廳 / 貓頭鷹手作教室');
+            const location = encodeURIComponent('奇美博物館豐收廳');
+            // Google Calendar 使用全日事件（20251123）到隔天（20251124）
+            const gDates = '20251123/20251124';
+            const gUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${gDates}&details=${details}&location=${location}`;
+
+            if (googleBtn) googleBtn.addEventListener('click', () => {
+                window.open(gUrl, '_blank');
+            });
         })();
     </script>
 </body>

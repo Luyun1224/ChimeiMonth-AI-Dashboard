@@ -211,6 +211,32 @@ body {
     font-weight: 700;
 }
 
+/* ====== 回應式調整（行動裝置優化） ====== */
+@media (max-width: 767px) {
+    .cinematic-title {
+        font-size: 1.6rem; /* 減少桌面大字在手機上造成斷行 */
+        letter-spacing: 0.02em;
+    }
+    #map {
+        height: 320px;
+    }
+    #group-chart-container { height: 320px; }
+    .kpi-card p { font-size: 2.2rem; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .cinematic-title { font-size: 2.4rem; }
+    #map { height: 420px; }
+}
+
+/* 小按鈕樣式（全站可用） */
+.btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 0.9rem; border-radius:0.5rem; font-weight:600; cursor:pointer; }
+.btn-primary { background: linear-gradient(180deg,#ffffff22,#ffffff11); color:#fff; border:1px solid rgba(255,255,255,0.12); }
+.btn-ghost { background: transparent; color: #fff; border:1px solid rgba(255,255,255,0.16); }
+
+/* 確保主要容器在小螢幕有左右內距，避免內容貼邊 */
+.custom-container { padding-left: 1rem; padding-right: 1rem; }
+
 /* (全新) 用於地圖上的永久標籤 */
 .location-tooltip {
     font-family: 'Noto Sans TC', sans-serif;
