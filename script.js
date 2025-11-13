@@ -1,8 +1,8 @@
-// ----- 資料來源 (N=61) -----
+// ----- 資料來源 (N=60) -----
 const finalDashboardData = {
-    "totalCount": 61,
+    "totalCount": 60,
     "totalExternal": 21,
-    "totalInternal": 40,
+    "totalInternal": 39,
     "roleKpi": {
         "it": 2,
         "clinical": 24,
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('kpi-external').textContent = finalDashboardData.totalExternal;
     document.getElementById('kpi-internal').textContent = finalDashboardData.totalInternal;
 
-    // --- 1. 地理分佈圖 (依據 N=61 全體人員) ---
+    // --- 1. 地理分佈圖 (依據 N=60 全體人員) ---
     if (typeof L !== 'undefined') {
         const map = L.map('map').setView([23.1, 120.3], 9); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
