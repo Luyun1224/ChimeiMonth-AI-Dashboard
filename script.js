@@ -1,8 +1,8 @@
-// ----- 資料來源 (N=60) -----
+// ----- 資料來源 (N=61) -----
 const finalDashboardData = {
-    "totalCount": 60,
+    "totalCount": 61,
     "totalExternal": 21,
-    "totalInternal": 39,
+    "totalInternal": 40,
     "roleKpi": {
         "it": 2,
         "clinical": 24,
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     {
                         label: '非臨床',
                         data: finalDashboardData.groupRoleData.nonClinical,
-                        backgroundColor: '#708090', // 灰藍
+                        backgroundColor: '#6C5CE7', // 紫藍
                     }
                 ]
             },
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ],
                     backgroundColor: [
                         '#FFA500', // 琥珀黃
-                        '#708090', // 灰藍
+                        '#6C5CE7', // 紫藍
                         '#003D82'  // 品牌藍
                     ],
                     borderColor: '#FFFFFF',
