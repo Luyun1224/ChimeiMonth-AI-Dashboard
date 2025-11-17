@@ -1,8 +1,8 @@
-// ----- 資料來源 (N=59) -----
+// ----- 資料來源 (N=60) -----
 const finalDashboardData = {
-    "totalCount": 59,
+    "totalCount": 60,
     "totalExternal": 20,
-    "totalInternal": 39,
+    "totalInternal": 40,
     "roleKpi": {
         "it": 2,
         "clinical": 24,
