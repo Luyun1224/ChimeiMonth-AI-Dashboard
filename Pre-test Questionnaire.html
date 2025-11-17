@@ -28,6 +28,24 @@ body {
     line-height: 1.6;
 }
 .container { max-width:980px; margin:0 auto; padding:24px; }
+
+/* 海報圖片樣式 */
+.poster-container {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 20px 60px rgba(13,30,79,.3);
+  border: 1px solid var(--card-border);
+}
+.poster-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
 .hero-grid { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
 .hero-card { border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(13,30,79,.15); position:relative; }
 
@@ -211,6 +229,9 @@ footer { text-align:center; padding:24px 0 8px; font-size:12px; color:#64748b; }
 /* RWD */
 @media (max-width:600px) {
   .container { padding:16px; }
+  .poster-image {
+    height: 250px;
+  }
   .hero-card.hero-info { padding:22px; }
   .hero-card.hero-info .badge { font-size:11px; padding:4px 10px; }
   h1 { font-size:22px; line-height:1.35; }
@@ -231,6 +252,11 @@ footer { text-align:center; padding:24px 0 8px; font-size:12px; color:#64748b; }
 </div>
 
 <div class="container">
+  <!-- 海報圖片 -->
+  <div class="poster-container">
+    <img src="poseter.jpg" alt="AI 數位賦能工作坊海報" class="poster-image">
+  </div>
+
   <div class="hero-grid">
     <div class="hero-card hero-info">
       <div class="badge">Workshop Survey</div>
