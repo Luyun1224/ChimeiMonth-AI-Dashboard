@@ -1,7 +1,7 @@
-// ----- 資料來源 (N=60) -----
+// ----- 資料來源 (N=59) -----
 const finalDashboardData = {
-    "totalCount": 60,
-    "totalExternal": 21,
+    "totalCount": 59,
+    "totalExternal": 20,
     "totalInternal": 39,
     "roleKpi": {
         "it": 2,
@@ -27,7 +27,6 @@ const finalDashboardData = {
         {"group": "第五組", "unit": "高雄醫學大學醫學系"},
         {"group": "第五組", "unit": "正信診所"},
         {"group": "第六組(貓頭鷹)", "unit": "大林慈濟醫院教學部"},
-        {"group": "第六組(貓頭鷹)", "unit": "大林慈濟醫院教學部"},
         {"group": "第六組(貓頭鷹)", "unit": "三愛診所"},
         {"group": "第六組(貓頭鷹)", "unit": "國光生物科技股份有限公司"},
         {"group": "第七組(貓頭W鷹)", "unit": "成大醫院受試者保護中心"},
@@ -43,12 +42,12 @@ const finalDashboardData = {
     },
     "externalAnalysis": {
         "byType": {
-            "醫院": 14,
+            "醫院": 13,
             "學校": 6,
             "其他": 1
         },
         "byHospitalLevel": {
-            "醫學中心": 6,
+            "醫學中心": 5,
             "診所": 7,
             "地區醫院": 1
         }
