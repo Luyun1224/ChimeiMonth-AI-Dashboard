@@ -553,6 +553,18 @@ function getLikertValue(group) {
   return ""; // 未填答
 }
 
+// 輔助函式：驗證 Likert 量表是否全部填答
+function validateLikert(prefix, itemCount) {
+  const missingItems = [];
+  for (let i = 0; i < itemCount; i++) {
+    const value = getLikertValue(`${prefix}_${i}`);
+    if (!value) {
+      missingItems.push(i + 1); // 記錄題號 (從 1 開始)
+    }
+  }
+  return missingItems;
+}
+
 // 輔助函式：蒐集基本資料
 function getBaseData() {
   const role = document.getElementById("role").value;
@@ -583,14 +595,31 @@ async function submitSurvey(type) { // 加上 async
   let surveyName = "";
   let isPostTest = false; // 用於標記是否為後測
   let button; // 按鈕 DOM
+  let missingItems = []; // 未填答的題目
 
   if (type === 'post') {
     surveyName = "AI 工作坊 - 後測問卷";
+    
+    // 驗證後測問卷必填項目
+    missingItems = validateLikert("post", POST_TEST_ITEMS.length);
+    if (missingItems.length > 0) {
+      showModal("提醒", `請完成所有必填題目！尚未填答的題目：第 ${missingItems.join(', ')} 題`);
+      return;
+    }
+    
     surveyData = buildPostTestResponse();
     isPostTest = true; // 標記為後測
     button = document.getElementById('submit-btn-post');
   } else if (type === 'sat') {
-    surveyName = "AI 工作坊 - 滿意度問卷"; // 修正錯字
+    surveyName = "AI 工作坊 - 滿意度問卷";
+    
+    // 驗證滿意度問卷必填項目
+    missingItems = validateLikert("sat", SATISFACTION_ITEMS.length);
+    if (missingItems.length > 0) {
+      showModal("提醒", `請完成所有必填題目！尚未填答的題目：第 ${missingItems.join(', ')} 題`);
+      return;
+    }
+    
     surveyData = buildSatisfactionResponse();
     button = document.getElementById('submit-btn-sat');
   }
