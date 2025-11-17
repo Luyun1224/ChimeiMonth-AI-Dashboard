@@ -40,9 +40,9 @@ body {
 }
 .poster-image {
   width: 100%;
-  height: 400px;
+  height: 300px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 30%;
   display: block;
 }
 
@@ -230,7 +230,8 @@ footer { text-align:center; padding:24px 0 8px; font-size:12px; color:#64748b; }
 @media (max-width:600px) {
   .container { padding:16px; }
   .poster-image {
-    height: 250px;
+    height: 200px;
+    object-position: center 25%;
   }
   .hero-card.hero-info { padding:22px; }
   .hero-card.hero-info .badge { font-size:11px; padding:4px 10px; }
@@ -506,6 +507,21 @@ async function submitSurvey(type) { // 加上 async
 
   if (type === 'pre') {
     surveyName = "AI 工作坊 - 前測問卷";
+    
+    // 3. 檢查前測問卷的 Likert 量表是否全部填答
+    const missingItems = [];
+    PRE_TEST_ITEMS.forEach((item, idx) => {
+      const value = getLikertValue(`pre_${idx}`);
+      if (!value) {
+        missingItems.push(`第 ${idx + 1} 題`);
+      }
+    });
+    
+    if (missingItems.length > 0) {
+      showModal("提醒", `請完成以下必填題目：\n${missingItems.join('、')}`);
+      return;
+    }
+    
     surveyData = buildPreTestResponse();
   }
 
@@ -516,7 +532,7 @@ async function submitSurvey(type) { // 加上 async
     ...surveyData
   };
 
-  // 在 Console 中顯示結果，模擬送出
+  // 在 Console 中顯示結果,模擬送出
   console.log("問卷提交中...", finalResponse);
   
   // 呼叫 Google Sheet 提交
