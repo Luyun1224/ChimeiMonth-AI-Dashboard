@@ -294,38 +294,18 @@ footer { text-align:center; padding:24px 0 8px; font-size:12px; color:#64748b; }
     </div>
   </div>
 
-  <!-- Pre/Post/Satisfaction 合併卡片 -->
-  <div class="card" id="survey-card">
+  <!-- Pre-Test Card -->
+  <div class="card" id="pre-test-card">
     <div class="section-title">A. 前測問卷 (1-5分)</div>
     <p class="note" style="margin-bottom: 16px;">(1=非常不同意, 5=非常同意)</p>
     <div id="pre-likert-container"></div>
-
-    <label style="margin-top:20px; font-weight: 700;">【開放式問題 - 前測】</label>
+    
+    <label style="margin-top:20px; font-weight: 700;">【開放式問題】</label>
     <label for="pre-open">您希望本次課程能解決的最重要困難是什麼？</label>
     <textarea id="pre-open" rows="3"></textarea>
-
-    <hr style="border-color: var(--card-border); margin:20px 0;">
-
-    <div class="section-title">B. 後測問卷 (1-5分)</div>
-    <p class="note" style="margin-bottom: 16px;">（課程結束後請回覆）</p>
-    <div id="post-likert-container"></div>
-
-    <label style="margin-top:20px; font-weight: 700;">【開放式問題 - 後測】</label>
-    <label for="post-open">您在課程結束後覺得最大的收穫是什麼？</label>
-    <textarea id="post-open" rows="3"></textarea>
-
-    <hr style="border-color: var(--card-border); margin:20px 0;">
-
-    <div class="section-title">C. 滿意度 (1-5分)</div>
-    <p class="note" style="margin-bottom: 16px;">(1=非常不滿意, 5=非常滿意)</p>
-    <div id="sat-likert-container"></div>
-
-    <label style="margin-top:20px; font-weight: 700;">【開放式問題 - 滿意度】</label>
-    <label for="sat-open">您對本次工作坊的整體建議或回饋：</label>
-    <textarea id="sat-open" rows="2"></textarea>
-
+    
     <div style="margin-top:12px;">
-      <button class="submit" id="submit-btn">提交問卷</button>
+      <button class="submit" id="submit-btn-pre" onclick="submitSurvey('pre')">提交前測問卷</button>
     </div>
   </div>
 
@@ -360,7 +340,7 @@ modalOverlay.onclick = (e) => {
 
 
 /* ---------------------------------- */
-/* 問卷題目定義（新增後測與滿意度） */
+/* 問卷題目定義 */
 /* ---------------------------------- */
 const PRE_TEST_ITEMS = [
   "【事前認知】我能明確區分 AI 工具在臨床、教學、或我工作領域的適用與不適用範圍。",
@@ -373,22 +353,8 @@ const PRE_TEST_ITEMS = [
   "【轉化學習】我願意以新的觀點理解 AI 於醫學教育、臨床醫學中的角色。"
 ];
 
-const POST_TEST_ITEMS = [
-  "我能在實務情境中辨識可由 AI 協助的工作流程。",
-  "我能實作或重現工作坊中所展示的 AI 工具示範步驟。",
-  "我認為本次課程內容對於我的工作/教學有實際幫助。",
-  "我願意在日後的工作中嘗試整合所學的 AI 工具與方法。"
-];
-
-const SAT_ITEMS = [
-  "課程整體內容符合我的期待。",
-  "講師教學方式清楚且易於理解。",
-  "課程節奏與實作練習安排適當。",
-  "我願意推薦本工作坊給同事或朋友。"
-];
-
 /* ---------------------------------- */
-/* 渲染 Likert 量表（共用函式已存在） */
+/* 渲染 Likert 量表 */
 /* ---------------------------------- */
 function renderLikert(containerId, items, prefix) {
   const container = document.getElementById(containerId);
@@ -447,14 +413,19 @@ function renderLikert(containerId, items, prefix) {
 
 // 頁面載入時渲染所有量表
 renderLikert("pre-likert-container", PRE_TEST_ITEMS, "pre");
-renderLikert("post-likert-container", POST_TEST_ITEMS, "post");
-renderLikert("sat-likert-container", SAT_ITEMS, "sat");
 
 /* ---------------------------------- */
 /* Google Sheet 提交 */
 /* ---------------------------------- */
+// 1. 您的 Web App URL
 const DEPLOYED_URL = "https://script.google.com/macros/s/AKfycbxopRT91OyChEF1LMd9QSdAyPhIk_3NVHEofMS4PNz6wYbNUGhSCNBwtviO7WRpOxCa/exec";
 
+/**
+ * 異步提交資料到 Google Sheet
+ * @param {object} dataObject - 要提交的資料物件
+ * @param {HTMLButtonElement} button - 被點擊的按鈕
+ * @returns {Promise<boolean>} - 回傳是否提交成功
+ */
 async function sendToGoogleSheet(dataObject, button) {
   // 顯示讀取中
   if (button) {
@@ -472,15 +443,18 @@ async function sendToGoogleSheet(dataObject, button) {
       },
     });
 
+    // *** 修正：在 'no-cors' 模式下，我們無法讀取 response.json()。
+    // 我們只能假設 fetch 成功解析 = 提交成功 (這仍然會捕捉到網路層級的錯誤)。
     console.log("資料已送出 (no-cors 模式)");
     return true; // 回傳成功
     
   } catch (error) {
+    // 如果是網路連線錯誤 (例如 fetch 失敗)
     console.error("Fetch 錯誤:", error);
     showModal("提交失敗", "無法連線至資料庫，請檢查您的網路連線。 " + error);
     if (button) { // 恢復按鈕
       button.disabled = false;
-      button.textContent = "提交問卷";
+      button.textContent = "提交前測問卷";
     }
     return false; // 回傳失敗
   }
@@ -488,7 +462,7 @@ async function sendToGoogleSheet(dataObject, button) {
 
 
 /* ---------------------------------- */
-/* 資料蒐集與提交（更新） */
+/* 資料蒐集與提交 */
 /* ---------------------------------- */
 
 // 輔助函式：取得 Likert 量表的值
@@ -511,74 +485,81 @@ function getBaseData() {
   };
 }
 
-// 建立整體回應物件（前測 / 後測 / 滿意度）
-function buildAllResponses() {
-  let data = {};
-
-  PRE_TEST_ITEMS.forEach((_, idx) => {
-    data[`pre_${idx+1}`] = getLikertValue(`pre_${idx}`) || "";
-  });
-  data.open_pre = document.getElementById("pre-open").value.replace(/\n/g, " ");
-
-  POST_TEST_ITEMS.forEach((_, idx) => {
-    data[`post_${idx+1}`] = getLikertValue(`post_${idx}`) || "";
-  });
-  data.open_post = document.getElementById("post-open").value.replace(/\n/g, " ");
-
-  SAT_ITEMS.forEach((_, idx) => {
-    data[`sat_${idx+1}`] = getLikertValue(`sat_${idx}`) || "";
-  });
-  data.open_sat = document.getElementById("sat-open").value.replace(/\n/g, " ");
-
-  return data;
-}
-
-/* 檢查是否有缺答題目（回傳缺項清單） */
-function validateAllResponses() {
-  const missing = [];
-
-  PRE_TEST_ITEMS.forEach((_, idx) => {
-    if (!getLikertValue(`pre_${idx}`)) missing.push(`前測 第 ${idx+1} 題`);
-  });
-  POST_TEST_ITEMS.forEach((_, idx) => {
-    if (!getLikertValue(`post_${idx}`)) missing.push(`後測 第 ${idx+1} 題`);
-  });
-  SAT_ITEMS.forEach((_, idx) => {
-    if (!getLikertValue(`sat_${idx}`)) missing.push(`滿意度 第 ${idx+1} 題`);
-  });
-
-  // 基本資料與同意也要檢查
+// 提交總管
+async function submitSurvey(type) { // 加上 async
+  const button = document.getElementById('submit-btn-pre');
+  
+  // 1. 檢查同意書
   if (!document.getElementById("consent").checked) {
-    missing.unshift("請勾選同意書");
+    showModal("提醒", "請先勾選「我已閱讀並同意參與匿名調查」。");
+    return;
   }
+  
+  // 2. 檢查基本資料
   const role = document.getElementById("role").value;
-  if (!role) missing.unshift("請選擇您的「角色別」");
-
-  return missing;
-}
-
-/* submit handler（合併） */
-async function submitSurvey() {
-  const button = document.getElementById('submit-btn');
-
-  const missing = validateAllResponses();
-  if (missing.length > 0) {
-    showModal("提醒", `請完成以下項目：\n${missing.join('、')}`);
+  if (!role) {
+    showModal("提醒", "請先選擇您的「角色別」。");
     return;
   }
 
-  const surveyName = "AI 工作坊 - 前後測與滿意度（一次提交）";
+  let surveyData = {};
+  let surveyName = "";
 
+  if (type === 'pre') {
+    surveyName = "AI 工作坊 - 前測問卷";
+    
+    // 3. 檢查前測問卷的 Likert 量表是否全部填答
+    const missingItems = [];
+    PRE_TEST_ITEMS.forEach((item, idx) => {
+      const value = getLikertValue(`pre_${idx}`);
+      if (!value) {
+        missingItems.push(`第 ${idx + 1} 題`);
+      }
+    });
+    
+    if (missingItems.length > 0) {
+      showModal("提醒", `請完成以下必填題目：\n${missingItems.join('、')}`);
+      return;
+    }
+    
+    surveyData = buildPreTestResponse();
+  }
+
+  // 整合基本資料
   const finalResponse = {
-    surveyName,
+    surveyName: surveyName,
     ...getBaseData(),
-    ...buildAllResponses()
+    ...surveyData
   };
 
+  // 在 Console 中顯示結果,模擬送出
   console.log("問卷提交中...", finalResponse);
-
+  
+  // 呼叫 Google Sheet 提交
   const success = await sendToGoogleSheet(finalResponse, button);
 
   if (success) {
+    // 顯示成功訊息
     showModal("提交成功", "感謝您的填寫！您的回饋已成功記錄。");
-    if
+    // 成功提交後，禁用按鈕
+    if (button) {
+      button.disabled = true;
+      button.textContent = "已提交";
+    }
+  }
+  // 失敗的訊息已在 sendToGoogleSheet 中處理
+}
+
+// 建立前測回應物件
+function buildPreTestResponse() {
+  let data = {};
+  PRE_TEST_ITEMS.forEach((_, idx) => {
+    data[`pre_${idx}`] = getLikertValue(`pre_${idx}`);
+  });
+  data.open_pre = document.getElementById("pre-open").value.replace(/\n/g, " ");
+  return data;
+}
+
+</script>
+</body>
+</html>
