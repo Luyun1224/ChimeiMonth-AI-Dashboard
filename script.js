@@ -1,10 +1,10 @@
-// ----- 資料來源 (N=60) -----
+// ----- 資料來源 (N=61) -----
 const finalDashboardData = {
-    "totalCount": 60,
+    "totalCount": 61,
     "totalExternal": 20,
-    "totalInternal": 40,
+    "totalInternal": 41,
     "roleKpi": {
-        "it": 2,
+        "it": 3,
         "clinical": 24,
         "nonClinical": 34
     },
@@ -36,9 +36,9 @@ const finalDashboardData = {
     ],
     "groupRoleData": {
         "labels": ["第一組", "第二組", "第三組", "第四組", "第五組", "第六組(貓頭鷹)", "第七組(貓頭鷹)"],
-        "it": [0, 0, 1, 0, 1, 0, 0],
+        "it": [0, 1, 1, 0, 1, 0, 0],
         "clinical": [6, 4, 0, 4, 1, 4, 5],
-        "nonClinical": [3, 5, 7, 4, 6, 5, 4]
+        "nonClinical": [3, 4, 7, 4, 6, 5, 4]
     },
     "externalAnalysis": {
         "byType": {
